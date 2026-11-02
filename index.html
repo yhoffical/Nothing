@@ -3,831 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberPaste | Secure Lua Obfuscator & Script Hub</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome Icons -->
+    <title>CyberPaste | Script Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg-base: #060813;
-            --bg-surface: #0b0e22;
-            --bg-surface-elevated: #121633;
-            --bg-card: rgba(18, 22, 51, 0.6);
-            
-            --border-color: rgba(99, 102, 241, 0.18);
-            --border-glow: rgba(139, 92, 246, 0.4);
-            
-            --accent-blue: #3b82f6;
-            --accent-indigo: #6366f1;
-            --accent-violet: #8b5cf6;
-            --accent-cyan: #06b6d4;
-            
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --text-muted: #6b7280;
-            
-            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
-            --gradient-hover: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
-            --gradient-glow: radial-gradient(circle at center, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
-            
-            --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
+            --bg: #0b0d17;
+            --surface: #121629;
+            --border: #1e2645;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text: #f3f4f6;
+            --text-dim: #9ca3af;
+            --radius: 10px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 60%);
-            background-attachment: fixed;
-        }
-
-        /* Ambient Glow Background Element */
-        .ambient-glow {
-            position: fixed;
-            top: -150px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 800px;
-            height: 400px;
-            background: var(--gradient-glow);
-            pointer-events: none;
-            z-index: 0;
-            filter: blur(60px);
-        }
-
-        /* Glassmorphism Header */
-        header {
-            position: relative;
-            z-index: 10;
-            background: rgba(11, 14, 34, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 18px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-
-        .brand-icon {
-            width: 42px;
-            height: 42px;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 20px;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-        }
-
-        .brand-text h1 {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff 30%, var(--accent-indigo) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .brand-text p {
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .badge-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 20px;
-            font-size: 12px;
-            color: #34d399;
-            font-weight: 600;
-        }
-
-        .badge-status .dot {
-            width: 8px;
-            height: 8px;
-            background-color: #10b981;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #10b981;
-        }
-
-        /* Main Container */
-        main {
-            position: relative;
-            z-index: 5;
-            flex: 1;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 32px 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        /* Lock Screen Modal */
+        /* Auth Screen */
         .auth-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(6, 8, 19, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            position: fixed; inset: 0; background: rgba(11, 13, 23, 0.95);
+            z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .auth-box {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 30px; width: 100%; max-width: 380px; text-align: center;
+        }
+        .auth-box h2 { font-size: 18px; margin-bottom: 6px; }
+        .auth-box p { font-size: 12px; color: var(--text-dim); margin-bottom: 20px; }
+
+        /* Header */
+        header {
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .brand { font-weight: 700; font-size: 16px; color: #fff; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .brand i { color: var(--accent); }
+
+        /* Main */
+        main { flex: 1; max-width: 900px; width: 100%; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+        .panel {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;
+        }
+        .panel-title { font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        @media(max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+        .input-ctrl {
+            width: 100%; background: #070913; border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 10px 14px; color: #fff; font-size: 13px; outline: none; transition: 0.2s;
+        }
+        .input-ctrl:focus { border-color: var(--accent); }
+
+        textarea.code-area {
+            width: 100%; height: 240px; background: #070913; border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 12px; color: #e5e7eb; font-family: 'Fira Code', monospace; font-size: 12px; resize: vertical; outline: none;
         }
 
-        .auth-card {
-            background: var(--bg-surface-elevated);
-            border: 1px solid var(--border-glow);
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            width: 100%;
-            max-width: 440px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), var(--shadow-glow);
-            position: relative;
-            overflow: hidden;
+        .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 10px; }
+        
+        .btn {
+            background: var(--accent); color: #fff; border: none; border-radius: var(--radius);
+            padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s;
+            display: inline-flex; align-items: center; gap: 6px;
         }
+        .btn:hover { background: var(--accent-hover); }
 
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient-primary);
-        }
+        .checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); cursor: pointer; }
 
-        .auth-icon-wrapper {
-            width: 70px;
-            height: 70px;
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            color: var(--accent-indigo);
-            font-size: 28px;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
-        }
-
-        .auth-card h2 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-
-        .auth-card p {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 28px;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .input-group i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 16px;
-        }
-
-        .input-control {
-            width: 100%;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 14px 16px 14px 48px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-
-        .input-control:focus {
-            border-color: var(--accent-indigo);
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary {
-            width: 100%;
-            background: var(--gradient-primary);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-md);
-            padding: 14px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--gradient-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-        }
-
-        /* Editor Section Layout */
-        .workspace-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-
-        .editor-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-header {
-            background: rgba(11, 14, 34, 0.8);
-            border-bottom: 1px solid var(--border-color);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .card-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .card-title i {
-            color: var(--accent-indigo);
-        }
-
-        .editor-controls {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .toggle-switch {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            user-select: none;
-            background: var(--bg-surface);
-            padding: 8px 14px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-        }
-
-        .toggle-switch input {
-            display: none;
-        }
-
-        .slider {
-            width: 36px;
-            height: 20px;
-            background-color: var(--bg-surface-elevated);
-            border-radius: 20px;
-            position: relative;
-            transition: 0.3s;
-            border: 1px solid var(--border-color);
-        }
-
-        .slider::before {
-            content: '';
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            left: 2px;
-            top: 2px;
-            background-color: var(--text-secondary);
-            transition: 0.3s;
-        }
-
-        .toggle-switch input:checked + .slider {
-            background-color: var(--accent-indigo);
-            border-color: var(--accent-indigo);
-        }
-
-        .toggle-switch input:checked + .slider::before {
-            transform: translateX(16px);
-            background-color: #fff;
-        }
-
-        .toggle-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        /* Code Editor Area */
-        .editor-body {
-            position: relative;
-            min-height: 380px;
-            background: #070913;
-        }
-
-        textarea.code-editor {
-            width: 100%;
-            height: 400px;
-            background: transparent;
-            border: none;
-            padding: 20px;
-            color: #e5e7eb;
-            font-family: 'Fira Code', monospace;
-            font-size: 13px;
-            line-height: 1.6;
-            resize: vertical;
-            outline: none;
-            tab-size: 4;
-        }
-
-        textarea.code-editor::placeholder {
-            color: #4b5563;
-        }
-
-        .card-footer {
-            background: rgba(11, 14, 34, 0.8);
-            border-top: 1px solid var(--border-color);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .status-info {
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Result Panel */
-        .result-panel {
-            display: none;
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glow);
-            border-radius: var(--radius-lg);
-            padding: 28px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .result-header i {
-            color: #10b981;
-            font-size: 22px;
-        }
-
-        .result-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .result-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .result-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .result-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        /* Results Box */
+        .result-box { display: none; margin-top: 16px; background: #070913; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+        .result-item { margin-bottom: 10px; }
+        .result-item:last-child { margin-bottom: 0; }
+        .result-label { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; display: block; }
+        .code-output-row { display: flex; gap: 8px; }
         .code-display {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 12px 16px;
-            border-radius: var(--radius-sm);
-            font-family: 'Fira Code', monospace;
-            font-size: 13px;
-            color: var(--accent-cyan);
-            overflow-x: auto;
-            white-space: nowrap;
+            flex: 1; background: var(--surface); border: 1px solid var(--border); padding: 8px 12px;
+            border-radius: var(--radius); font-family: 'Fira Code', monospace; font-size: 11px; color: #34d399;
+            overflow-x: auto; white-space: nowrap; display: flex; align-items: center;
         }
+        .btn-sm { padding: 8px 12px; font-size: 11px; }
 
-        .btn-secondary {
-            background: rgba(99, 102, 241, 0.15);
-            color: var(--text-primary);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: var(--radius-sm);
-            padding: 12px 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
+        /* Published scripts list */
+        .scripts-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .script-card {
+            background: #070913; border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;
         }
+        .script-info b { color: #fff; }
+        .script-info span { color: var(--text-dim); font-size: 11px; margin-left: 6px; }
 
-        .btn-secondary:hover {
-            background: rgba(99, 102, 241, 0.25);
-            border-color: var(--accent-indigo);
-        }
-
-        /* Toast Notifications */
+        /* Toast */
         .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--bg-surface-elevated);
-            border: 1px solid var(--accent-indigo);
-            color: #fff;
-            padding: 14px 24px;
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), var(--shadow-glow);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 2000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: fixed; bottom: 20px; right: 20px; background: var(--surface); border: 1px solid var(--accent);
+            color: #fff; padding: 10px 16px; border-radius: var(--radius); font-size: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); transform: translateY(80px); opacity: 0; transition: 0.3s; z-index: 2000;
         }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--border-color);
-            padding: 24px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: auto;
-        }
-
-        /* Responsive Layout */
-        @media (max-width: 768px) {
-            header {
-                padding: 16px 20px;
-            }
-            main {
-                padding: 20px 16px;
-            }
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .editor-controls {
-                width: 100%;
-                justify-content: space-between;
-            }
-            .result-content {
-                flex-direction: column;
-            }
-            .btn-secondary {
-                width: 100%;
-                justify-content: center;
-            }
-        }
+        .toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
 
-    <div class="ambient-glow"></div>
-
-    <!-- Security Auth Screen -->
+    <!-- Auth -->
     <div class="auth-overlay" id="authScreen">
-        <div class="auth-card">
-            <div class="auth-icon-wrapper">
-                <i class="fa-solid => fa-shield-halved"></i>
-            </div>
-            <h2>Access Protection</h2>
-            <p>Please enter the security passkey to unlock the Script Hub & Obfuscator interface.</p>
-            <form id="authForm" onsubmit="handleAuth(event)">
-                <div class="input-group">
-                    <i class="fa-solid fa-key"></i>
-                    <input type="password" id="passkeyInput" class="input-control" placeholder="Enter Access Password..." required autocomplete="off">
-                </div>
-                <button type="submit" class="btn-primary">
-                    <i class="fa-solid fa-unlock"></i> Unlock Dashboard
-                </button>
+        <div class="auth-box">
+            <h2>Enter Password</h2>
+            <p>Access restricted to authorized developers only.</p>
+            <form onsubmit="handleAuth(event)">
+                <input type="password" id="passkeyInput" class="input-ctrl" placeholder="Password..." required autocomplete="off" style="margin-bottom: 12px;">
+                <button type="submit" class="btn" style="width: 100%; justify-content: center;">Login</button>
             </form>
         </div>
     </div>
 
-    <!-- Main Header -->
+    <!-- Header -->
     <header>
-        <a href="#" class="brand">
-            <div class="brand-icon">
-                <i class="fa-solid fa-code"></i>
-            </div>
-            <div class="brand-text">
-                <h1>CyberPaste</h1>
-                <p>Lua Execution Suite</p>
-            </div>
-        </a>
-        <div class="header-actions">
-            <div class="badge-status">
-                <span class="dot"></span> Delta Roblox Ready
-            </div>
-        </div>
+        <a href="#" class="brand"><i class="fa-solid fa-code"></i> CyberPaste</a>
+        <span style="font-size: 11px; color: var(--text-dim);">Delta Executor Ready</span>
     </header>
 
-    <!-- Main Workspace -->
+    <!-- Main Content -->
     <main>
-        <div class="workspace-grid">
-            <div class="editor-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-file-code"></i> Script Source Code
-                    </div>
-                    <div class="editor-controls">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="obfuscateToggle" checked>
-                            <span class="slider"></span>
-                            <span class="toggle-label"><i class="fa-solid fa-user-shield" style="color: var(--accent-violet);"></i> Heavy Obfuscation</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="editor-body">
-                    <textarea id="scriptInput" class="code-editor" placeholder="-- Paste your Lua script here...&#10;print('Hello World from CyberPaste!')" spellcheck="false"></textarea>
-                </div>
-                <div class="card-footer">
-                    <div class="status-info">
-                        <i class="fa-solid fa-circle-info"></i> Compatible with Roblox Executors (Delta, Hydrogen, Wave)
-                    </div>
-                    <button class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="publishScript()">
-                        <i class="fa-solid fa-paper-plane"></i> Publish & Generate Link
-                    </button>
-                </div>
+        <div class="panel">
+            <div class="panel-title">Publish New Script</div>
+            
+            <div class="form-grid">
+                <input type="text" id="authorInput" class="input-ctrl" placeholder="Author Name (e.g. YH)" required>
+                <input type="text" id="scriptNameInput" class="input-ctrl" placeholder="Script Name (e.g. AimLock v1)" required>
             </div>
 
-            <!-- Output Panel -->
-            <div class="result-panel" id="resultPanel">
-                <div class="result-header">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <h3>Script Published Successfully!</h3>
-                </div>
+            <textarea id="scriptInput" class="code-area" placeholder="-- Paste your Lua script here..." spellcheck="false"></textarea>
 
-                <div class="result-box">
-                    <span class="result-label">1. Direct Loadstring (Use in Roblox Executors):</span>
-                    <div class="result-content">
+            <div class="action-bar">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="obfuscateToggle" checked style="accent-color: var(--accent);">
+                    <span>Enable Obfuscation</span>
+                </label>
+                <button class="btn" onclick="publishScript()">
+                    <i class="fa-solid fa-paper-plane"></i> Publish
+                </button>
+            </div>
+
+            <!-- Result -->
+            <div class="result-box" id="resultBox">
+                <div class="result-item">
+                    <span class="result-label">Loadstring (Copy & run in Delta):</span>
+                    <div class="code-output-row">
                         <div class="code-display" id="loadstringDisplay"></div>
-                        <button class="btn-secondary" onclick="copyToClipboard('loadstringDisplay', 'Loadstring copied to clipboard!')">
-                            <i class="fa-regular fa-copy"></i> Copy Loadstring
-                        </button>
+                        <button class="btn btn-sm" onclick="copyText('loadstringDisplay', 'Loadstring copied!')"><i class="fa-regular fa-copy"></i></button>
                     </div>
                 </div>
-
-                <div class="result-box">
-                    <span class="result-label">2. Raw Code Endpoint URL:</span>
-                    <div class="result-content">
+                <div class="result-item" style="margin-top: 10px;">
+                    <span class="result-label">Raw Link:</span>
+                    <div class="code-output-row">
                         <div class="code-display" id="rawUrlDisplay"></div>
-                        <button class="btn-secondary" onclick="copyToClipboard('rawUrlDisplay', 'Raw URL copied to clipboard!')">
-                            <i class="fa-solid fa-link"></i> Copy Raw Link
-                        </button>
+                        <button class="btn btn-sm" onclick="copyText('rawUrlDisplay', 'Raw link copied!')"><i class="fa-regular fa-copy"></i></button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Community Scripts List -->
+        <div class="panel">
+            <div class="panel-title">Recent Published Scripts</div>
+            <div class="scripts-list" id="scriptsListContainer">
+                <span style="font-size: 11px; color: var(--text-dim);">No scripts published in this session yet.</span>
             </div>
         </div>
     </main>
 
-    <footer>
-        <p>&copy; CyberPaste System. Designed for secure high-performance Lua script distribution.</p>
-    </footer>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toastNotification">
-        <i class="fa-solid fa-circle-check" style="color: #34d399;"></i>
-        <span id="toastMessage">Action completed successfully!</span>
-    </div>
+    <div class="toast" id="toast">Action successful!</div>
 
     <script>
-        // Session Password Authentication (Valid only for current session - clears on tab close)
         const PASSKEY = "123YHTYH";
 
         window.addEventListener('DOMContentLoaded', () => {
-            const isAuthed = sessionStorage.getItem('cyber_session_auth');
-            if (isAuthed === 'true') {
+            if (sessionStorage.getItem('auth') === 'true') {
                 document.getElementById('authScreen').style.display = 'none';
             }
-            
-            // Check if URL has raw parameters
-            handleRawDataRoute();
+            handleRawRoute();
+            loadSavedScripts();
         });
 
         function handleAuth(e) {
             e.preventDefault();
-            const input = document.getElementById('passkeyInput').value;
-            if (input === PASSKEY) {
-                sessionStorage.setItem('cyber_session_auth', 'true');
-                document.getElementById('authScreen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('authScreen').style.display = 'none';
-                }, 300);
-                showToast("Access Granted. Welcome!");
+            const val = document.getElementById('passkeyInput').value;
+            if (val === PASSKEY) {
+                sessionStorage.setItem('auth', 'true');
+                document.getElementById('authScreen').style.display = 'none';
+                showToast("Access Granted");
             } else {
-                showToast("Incorrect Password! Please try again.");
+                showToast("Incorrect Password");
                 document.getElementById('passkeyInput').value = '';
-                document.getElementById('passkeyInput').focus();
             }
         }
 
-        // Fast Lua Obfuscator Engine (XOR + Bytecode Wrapper compatible with Roblox Executor Lua)
+        // Generate short 6-char random ID
+        function generateShortId() {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let res = '';
+            for(let i=0; i<6; i++) {
+                res += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return res;
+        }
+
         function obfuscateLua(code) {
             const key = Math.floor(Math.random() * 200) + 20;
             let bytes = [];
-            for (let i = 0; i < code.length; i++) {
-                bytes.push(code.charCodeAt(i) ^ key);
-            }
-            
-            const byteString = bytes.join(',');
-            
-            return `-- CyberPaste Obfuscated Script
-local _k = ${key}
-local _b = {${byteString}}
-local _s = ""
-for i = 1, #_b do
-    _s = _s .. string.char(bit32 and bit32.bxor(_b[i], _k) or (_b[i] ~ _k))
-end
-local _f, _e = loadstring(_s)
-if not _f then
-    error("[CyberPaste] Execution failed: " .. tostring(_e))
-else
-    return _f()
-end`;
+            for (let i = 0; i < code.length; i++) { bytes.push(code.charCodeAt(i) ^ key); }
+            return `-- Obfuscated by CyberPaste\local _k = ${key}\local _b = {${bytes.join(',')}}\local _s = ""\for i = 1, #_b do _s = _s .. string.char(bit32 and bit32.bxor(_b[i], _k) or (_b[i] ~ _k)) end\local f = loadstring(_s)\return f and f()`;
         }
 
-        // Encode Payload to Base64 Hash String
-        function encodePayload(str) {
-            return btoa(encodeURIComponent(str));
-        }
-
-        function decodePayload(str) {
-            return decodeURIComponent(atob(str));
-        }
-
-        // Publish Handler
         function publishScript() {
-            const rawCode = document.getElementById('scriptInput').value.trim();
-            if (!rawCode) {
-                showToast("Please enter a valid Lua script first!");
+            const author = document.getElementById('authorInput').value.trim();
+            const scriptName = document.getElementById('scriptNameInput').value.trim();
+            const code = document.getElementById('scriptInput').value.trim();
+
+            if (!author || !scriptName || !code) {
+                showToast("Please fill in Author, Script Name, and Code!");
                 return;
             }
 
-            const shouldObfuscate = document.getElementById('obfuscateToggle').checked;
-            const finalCode = shouldObfuscate ? obfuscateLua(rawCode) : rawCode;
+            const shouldObf = document.getElementById('obfuscateToggle').checked;
+            const finalCode = shouldObf ? obfuscateLua(code) : code;
 
-            // Generate payload hash
-            const payload = encodePayload(finalCode);
-            
-            // Build current URL
+            const shortId = generateShortId();
+            const payload = btoa(encodeURIComponent(finalCode));
+
+            // Save to localStorage so community list shows it
+            let saved = JSON.parse(localStorage.getItem('cyber_scripts') || '[]');
+            const scriptData = { id: shortId, author, scriptName, payload };
+            saved.unshift(scriptData);
+            localStorage.setItem('cyber_scripts', JSON.stringify(saved));
+
             const baseUrl = window.location.href.split('#')[0].split('?')[0];
-            const rawUrl = `${baseUrl}?raw=${payload}`;
+            const rawUrl = `${baseUrl}?id=${shortId}`;
             const loadstringCmd = `loadstring(game:HttpGet("${rawUrl}"))()`;
 
             document.getElementById('loadstringDisplay').innerText = loadstringCmd;
             document.getElementById('rawUrlDisplay').innerText = rawUrl;
+            document.getElementById('resultBox').style.display = 'block';
 
-            const resultPanel = document.getElementById('resultPanel');
-            resultPanel.style.display = 'block';
-            resultPanel.scrollIntoView({ behavior: 'smooth' });
-
-            showToast("Script published and loadstring ready!");
+            loadSavedScripts();
+            showToast("Script published successfully!");
         }
 
-        // Route handler for RAW execution requests
-        function handleRawDataRoute() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const rawData = urlParams.get('raw');
-
-            if (rawData) {
-                try {
-                    const decodedScript = decodePayload(rawData);
-                    document.open();
-                    document.write(decodedScript);
-                    document.close();
-                } catch (e) {
-                    document.body.innerText = "-- Error: Failed to render requested Raw Lua payload.";
-                }
+        function loadSavedScripts() {
+            const container = document.getElementById('scriptsListContainer');
+            const saved = JSON.parse(localStorage.getItem('cyber_scripts') || '[]');
+            
+            if (saved.length === 0) {
+                container.innerHTML = `<span style="font-size: 11px; color: var(--text-dim);">No scripts published yet.</span>`;
+                return;
             }
-        }
 
-        function copyToClipboard(elementId, message) {
-            const text = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast(message);
+            container.innerHTML = '';
+            saved.forEach(s => {
+                const baseUrl = window.location.href.split('#')[0].split('?')[0];
+                const rawUrl = `${baseUrl}?id=${s.id}`;
+                const loadstringCmd = `loadstring(game:HttpGet("${rawUrl}"))()`;
+
+                const card = document.createElement('div');
+                card.className = 'script-card';
+                card.innerHTML = `
+                    <div class="script-info">
+                        <b>${escapeHtml(s.scriptName)}</b><span>by ${escapeHtml(s.author)}</span>
+                    </div>
+                    <button class="btn btn-sm" onclick="copyDirect('${escapeHtml(loadstringCmd)}')"><i class="fa-regular fa-copy"></i> Copy Loadstring</button>
+                `;
+                container.appendChild(card);
             });
         }
 
+        function handleRawRoute() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const scriptId = urlParams.get('id');
+
+            if (scriptId) {
+                const saved = JSON.parse(localStorage.getItem('cyber_scripts') || '[]');
+                const found = saved.find(s => s.id === scriptId);
+                if (found) {
+                    try {
+                        const decoded = decodeURIComponent(atob(found.payload));
+                        document.open();
+                        document.write(decoded);
+                        document.close();
+                        return;
+                    } catch(e) {}
+                }
+                document.body.innerText = "-- Error: Script not found or expired.";
+            }
+        }
+
+        function copyText(elemId, msg) {
+            const text = document.getElementById(elemId).innerText;
+            navigator.clipboard.writeText(text).then(() => showToast(msg));
+        }
+
+        function copyDirect(text) {
+            navigator.clipboard.writeText(text).then(() => showToast("Loadstring copied!"));
+        }
+
         function showToast(msg) {
-            const toast = document.getElementById('toastNotification');
-            document.getElementById('toastMessage').innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
     </script>
 </body>
