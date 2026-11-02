@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCRIPT VAULT | Ultra Obfuscator & Paste Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        deep: {
+                            950: '#070814',
+                            900: '#0B0C1E',
+                            850: '#10122B',
+                            800: '#161938',
+                            700: '#212552',
+                        },
+                        cyber: {
+                            blue: '#3B82F6',
+                            indigo: '#6366F1',
+                            violet: '#8B5CF6',
+                            purple: '#A855F7',
+                            pink: '#EC4899',
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['Fira Code', 'JetBrains Mono', 'monospace'],
+                        sans: ['Tajawal', 'Plus Jakarta Sans', 'sans-serif']
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'shop-glow': 'radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #070814;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom Glowing Elements & Shop Card Borders */
+        .glass-card {
+            background: rgba(16, 18, 43, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+        }
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-hover:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.25);
+            transform: translateY(-2px);
+        }
+        .glow-btn {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+            transition: all 0.3s ease;
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+            transform: scale(1.02);
+        }
+        .badge-glow {
+            box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
+        }
+        /* Editor Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0C1E;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #212552;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8B5CF6;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-cyber-purple selection:text-white bg-shop-glow bg-no-repeat">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-deep-800/90 border border-cyber-purple/40 backdrop-blur-xl text-white font-bold px-6 py-3.5 rounded-2xl shadow-2xl transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4">
+        <div class="w-8 h-8 rounded-xl bg-cyber-purple/20 flex items-center justify-center text-cyber-purple border border-cyber-purple/30">
+            <i id="toast-icon" class="fas fa-check-circle text-base"></i>
+        </div>
+        <span id="toast-message" class="text-sm">تمت العملية بنجاح!</span>
+    </div>
+
+    <!-- 1. VIP Password Protection Modal -->
+    <div id="lock-screen" class="fixed inset-0 z-50 bg-deep-950/95 backdrop-blur-2xl flex items-center justify-center p-4">
+        <div class="glass-card p-8 sm:p-10 rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden border border-cyber-purple/20">
+            <!-- Ambient Shop Lights -->
+            <div class="absolute -top-20 -right-20 w-48 h-48 bg-cyber-indigo/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-cyber-purple/20 rounded-full blur-3xl"></div>
+
+            <div class="text-center mb-8 relative z-10">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-cyber-indigo/20 to-cyber-purple/20 text-cyber-violet rounded-2xl mb-4 border border-cyber-purple/30 shadow-inner">
+                    <i class="fas fa-shield-cat text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-black text-white tracking-wide">منطقة محمية VIP</h2>
+                <p class="text-slate-400 text-xs mt-2 font-medium">أدخل كلمة المرور الخاصة للوصول إلى لوحة التحكم</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5 relative z-10">
+                <div>
+                    <label class="block text-xs text-slate-300 mb-2 font-bold tracking-wider">كلمة المرور (ACCESS CODE)</label>
+                    <div class="relative">
+                        <input type="password" id="password-input" placeholder="••••••••" required 
+                            class="w-full bg-deep-900/90 border border-deep-700 focus:border-cyber-purple focus:ring-2 focus:ring-cyber-purple/30 rounded-xl px-4 py-3.5 text-white code-font text-center tracking-widest outline-none transition duration-200">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white px-2">
+                            <i id="eye-icon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="login-error" class="hidden text-rose-400 text-xs text-center font-bold bg-rose-500/10 py-2.5 rounded-xl border border-rose-500/20">
+                    <i class="fas fa-circle-exclamation ml-1"></i> كلمة المرور غير صحيحة!
+                </div>
+
+                <button type="submit" class="w-full glow-btn text-white font-extrabold py-3.5 rounded-xl transition duration-200 flex items-center justify-center gap-2 text-sm tracking-wider">
+                    <span>تأكيد الدخول</span>
+                    <i class="fas fa-unlock text-xs"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-cyber-purple/15 bg-deep-900/60 backdrop-blur-xl sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4 cursor-pointer" onclick="resetToHome()">
+                <div class="w-12 h-12 bg-gradient-to-tr from-cyber-indigo/20 via-cyber-violet/20 to-cyber-purple/20 border border-cyber-purple/40 rounded-2xl flex items-center justify-center text-cyber-purple font-black text-2xl shadow-lg">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div>
+                    <h1 class="font-black text-xl text-white tracking-wider flex items-center gap-2">
+                        SCRIPT VAULT
+                        <span class="bg-gradient-to-r from-cyber-indigo to-cyber-purple text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase shadow-md">STORE PRO</span>
+                    </h1>
+                    <p class="text-[11px] text-slate-400 font-medium">منصة التشفير وتوليد الـ Loadstring الفاخرة</p>
+                </div>
+            </div>
+
+            <!-- Header Quick Actions -->
+            <div class="flex items-center gap-3">
+                <button onclick="resetToHome()" class="text-xs bg-deep-850 hover:bg-deep-800 text-slate-200 border border-cyber-purple/20 px-4 py-2.5 rounded-xl transition flex items-center gap-2 font-bold shadow-sm hover:border-cyber-purple/40">
+                    <i class="fas fa-plus text-cyber-violet"></i>
+                    <span class="hidden sm:inline">إضافة سكربت</span>
+                </button>
+                <button onclick="logout()" class="text-xs text-rose-400 bg-rose-500/5 hover:bg-rose-500/10 px-3.5 py-2.5 rounded-xl transition border border-rose-500/20 flex items-center gap-2 font-bold">
+                    <i class="fas fa-power-off"></i>
+                    <span class="hidden sm:inline">خروج</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-10">
+
+        <!-- Banner / Stats Header -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-cyber-purple/20 shadow-2xl">
+            <div class="absolute -right-16 -top-16 w-64 h-64 bg-cyber-purple/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+                <div class="space-y-2">
+                    <div class="inline-flex items-center gap-2 bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple px-3 py-1 rounded-full text-xs font-bold badge-glow">
+                        <i class="fas fa-shield-halved"></i>
+                        <span>تشفير عالي الأمان + حماية متقدمة</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white">انشر وكودك بأمان تام مع Loadstring مباشر</h2>
+                    <p class="text-slate-400 text-xs sm:text-sm max-w-xl">شفر سكربتات اللوا بتشفير معقد ومحمي من السرقة، واحصل على رابط استدعاء مباشر لاستخدامه داخل الهيدرات والمشغلات فوراً.</p>
+                </div>
+
+                <!-- Stats Badges -->
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <div class="bg-deep-900/80 border border-cyber-purple/20 px-4 py-3 rounded-2xl flex-1 md:flex-none text-center">
+                        <span class="block text-xs text-slate-400 font-medium">الخوارزمية</span>
+                        <span class="text-sm font-extrabold text-cyber-purple code-font">XOR + Bytecode</span>
+                    </div>
+                    <div class="bg-deep-900/80 border border-cyber-purple/20 px-4 py-3 rounded-2xl flex-1 md:flex-none text-center">
+                        <span class="block text-xs text-slate-400 font-medium">الحالة</span>
+                        <span class="text-sm font-extrabold text-emerald-400 flex items-center justify-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            نشط 100%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 1: CREATE & OBFUSCATE EDITOR -->
+        <div id="create-view" class="space-y-6">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl border border-cyber-purple/20">
+                <div class="flex flex-col md:flex-row gap-4 mb-6 justify-between items-stretch md:items-center">
+                    <!-- Script Title Input -->
+                    <div class="flex-1 relative">
+                        <input type="text" id="script-title" placeholder="عنوان السكربت (مثال: Premium Hub V2)" 
+                            class="w-full bg-deep-900/90 border border-deep-700 focus:border-cyber-purple focus:ring-2 focus:ring-cyber-purple/20 rounded-2xl px-5 py-4 text-white text-sm outline-none font-bold placeholder:text-slate-500 transition">
+                    </div>
+                    
+                    <!-- Obfuscation Toggle Box -->
+                    <div class="flex items-center justify-between gap-4 bg-deep-900/90 border border-deep-700 px-5 py-3.5 rounded-2xl border-cyber-purple/20">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-cyber-purple/10 text-cyber-purple flex items-center justify-center border border-cyber-purple/20">
+                                <i class="fas fa-lock-triangle text-sm"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-black text-white block">تشفير قوي جداً</span>
+                                <span class="text-[10px] text-slate-400 block">Heavy Obfuscation</span>
+                            </div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="obfuscate-toggle" class="sr-only peer" checked>
+                            <div class="w-12 h-6 bg-deep-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-cyber-indigo peer-checked:to-cyber-purple"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Code Input Textarea -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center px-1">
+                        <label class="text-xs font-bold text-slate-300 flex items-center gap-2">
+                            <i class="fas fa-code text-cyber-violet"></i>
+                            محرر السكربتات (Lua Code Input)
+                        </label>
+                        <button onclick="clearEditor()" class="text-xs text-slate-400 hover:text-rose-400 transition flex items-center gap-1 font-bold">
+                            <i class="fas fa-trash-can"></i>
+                            <span>مسح النص</span>
+                        </button>
+                    </div>
+                    <div class="relative rounded-2xl overflow-hidden border border-deep-700 focus-within:border-cyber-purple transition">
+                        <textarea id="script-content" rows="14" placeholder="-- ضع كود السكربت الخاص بك هنا (Lua Code)...&#10;print('Hello World from Script Vault!')"
+                            class="w-full bg-deep-950/90 p-5 text-slate-100 code-font text-xs sm:text-sm outline-none resize-y leading-relaxed"></textarea>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="mt-8 flex justify-end">
+                    <button onclick="publishScript()" class="w-full sm:w-auto glow-btn text-white font-black px-10 py-4 rounded-2xl transition flex items-center justify-center gap-3 text-base">
+                        <i class="fas fa-bolt text-lg"></i>
+                        <span>نشر السكربت وتوليد الرابط</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: DISPLAY & LOADSTRING GENERATOR -->
+        <div id="display-view" class="hidden space-y-8">
+            
+            <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl border border-cyber-purple/20 space-y-8">
+                <!-- Header Status -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-cyber-purple/15 pb-6 gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-3">
+                            <h2 id="view-title" class="text-2xl font-black text-white">عنوان السكربت</h2>
+                            <span id="view-badge" class="bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30 text-xs px-3 py-1 rounded-full font-bold">مُشفر VIP</span>
+                        </div>
+                        <p class="text-xs text-slate-400">تم تجهيز كود الـ Loadstring المباشر للتشغيل الفوري.</p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="copyRawCode()" class="bg-deep-850 hover:bg-deep-800 text-slate-100 border border-cyber-purple/20 px-5 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center gap-2">
+                            <i class="fas fa-file-code text-cyber-violet"></i>
+                            <span>نسخ الكود (Raw)</span>
+                        </button>
+                        <button onclick="copyLoadstring()" class="glow-btn text-white px-6 py-2.5 rounded-xl text-xs font-black transition flex items-center gap-2">
+                            <i class="fas fa-copy"></i>
+                            <span>نسخ الـ Loadstring</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loadstring Command Box -->
+                <div class="space-y-3">
+                    <label class="block text-xs font-black text-cyber-purple uppercase tracking-wider flex items-center gap-2">
+                        <i class="fas fa-terminal"></i>
+                        رابط الاستدعاء المباشر (Direct Loadstring Executor)
+                    </label>
+                    <div class="bg-deep-950 border border-cyber-purple/30 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
+                        <code id="loadstring-output" class="code-font text-xs text-slate-200 overflow-x-auto whitespace-nowrap block py-1 w-full">
+                            loadstring(game:HttpGet("..."))()
+                        </code>
+                        <button onclick="copyLoadstring()" class="bg-cyber-purple/10 hover:bg-cyber-purple/20 text-cyber-purple border border-cyber-purple/30 p-2.5 rounded-xl transition shrink-0">
+                            <i class="fas fa-clone text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Code View -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-xs font-bold text-slate-400">معاينة محتوى الكود النهائي</label>
+                        <span id="char-count" class="text-xs text-slate-500 code-font">0 حروف</span>
+                    </div>
+                    <pre><code id="view-code" class="block w-full bg-deep-950 border border-deep-700 rounded-2xl p-5 text-slate-300 code-font text-xs overflow-x-auto leading-relaxed max-h-[450px]"></code></pre>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-cyber-purple/15 py-8 text-center text-xs text-slate-500 bg-deep-950">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p class="font-medium">SCRIPT VAULT STORE © <span id="year"></span> • جميع الحقوق محفوظة</p>
+            <div class="flex items-center gap-4 text-slate-400 text-sm">
+                <i class="fab fa-discord hover:text-cyber-purple transition cursor-pointer"></i>
+                <i class="fab fa-github hover:text-cyber-purple transition cursor-pointer"></i>
+                <i class="fas fa-shield-cat hover:text-cyber-purple transition cursor-pointer"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logic Engine -->
+    <script>
+        const AUTH_KEY = '123YHTYH';
+        const SESSION_STORAGE_KEY = 'script_vault_auth';
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        window.onload = function() {
+            checkAuth();
+            handleUrlParams();
+        };
+
+        function checkAuth() {
+            const isAuthenticated = localStorage.getItem(SESSION_STORAGE_KEY);
+            const lockScreen = document.getElementById('lock-screen');
+            if (isAuthenticated === 'true') {
+                lockScreen.classList.add('hidden');
+            } else {
+                lockScreen.classList.remove('hidden');
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const passwordInput = document.getElementById('password-input').value;
+            const errorDiv = document.getElementById('login-error');
+
+            if (passwordInput === AUTH_KEY) {
+                localStorage.setItem(SESSION_STORAGE_KEY, 'true');
+                document.getElementById('lock-screen').classList.add('hidden');
+                errorDiv.classList.add('hidden');
+                showToast('تم تسجيل الدخول بنجاح!', 'fa-lock-open');
+            } else {
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem(SESSION_STORAGE_KEY);
+            location.reload();
+        }
+
+        function togglePasswordVisibility() {
+            const input = document.getElementById('password-input');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        function clearEditor() {
+            document.getElementById('script-content').value = '';
+            showToast('تم مسح المحرر!', 'fa-eraser');
+        }
+
+        // Heavy Multi-Layer Lua Obfuscation Engine
+        function obfuscateLua(code) {
+            if (!code.trim()) return '';
+
+            // Step 1: XOR Byte Processing
+            const bytes = [];
+            for (let i = 0; i < code.length; i++) {
+                bytes.push(code.charCodeAt(i));
+            }
+
+            const randVar = (prefix) => prefix + '_' + Math.random().toString(36).substring(2, 9);
+            const varArray = randVar('VaultData');
+            const varStr = randVar('Decrypted');
+            const varKey = Math.floor(Math.random() * 200) + 10;
+            const varKeyName = randVar('Key');
+            const varFunc = randVar('Run');
+
+            const encryptedBytes = bytes.map(b => b ^ varKey);
+
+            // Step 2: Advanced Dynamic Wrapper Construction
+            const obfuscatedCode = 
+`--[[
+    ==================================================
+    [ SCRIPT VAULT - HEAVY LUA OBFUSCATOR V2 ]
+    Protected & Encrypted with Ultra XOR Bytecode Engine
+    Timestamp: ${new Date().toUTCString()}
+    ==================================================
+--]]
+
+local ${varKeyName} = ${varKey};
+local ${varArray} = {${encryptedBytes.join(',')}};
+local ${varStr} = "";
+
+for i = 1, #${varArray} do
+    local b = ${varArray}[i];
+    ${varStr} = ${varStr} .. string.char(bit32 and bit32.bxor(b, ${varKeyName}) or (b ~ ${varKeyName}));
+end
+
+local ${varFunc} = assert(loadstring or load)(${varStr});
+return ${varFunc}();`;
+
+            return obfuscatedCode;
+        }
+
+        function publishScript() {
+            const title = document.getElementById('script-title').value.trim() || 'Untitled Script';
+            let code = document.getElementById('script-content').value;
+            const isObfuscated = document.getElementById('obfuscate-toggle').checked;
+
+            if (!code.trim()) {
+                showToast('يرجى إدخال الكود أولاً!', 'fa-exclamation-triangle');
+                return;
+            }
+
+            if (isObfuscated) {
+                code = obfuscateLua(code);
+            }
+
+            const payload = {
+                t: title,
+                c: code,
+                o: isObfuscated,
+                d: Date.now()
+            };
+
+            try {
+                const jsonStr = JSON.stringify(payload);
+                const encoded = btoa(encodeURIComponent(jsonStr));
+                
+                window.location.hash = 'paste=' + encoded;
+                renderDisplayView(title, code, isObfuscated);
+                showToast('تم التشفير والتولد بنجاح!', 'fa-shield-check');
+            } catch (e) {
+                showToast('حدث خطأ أثناء معالجة الكود!', 'fa-times-circle');
+            }
+        }
+
+        function handleUrlParams() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#paste=')) {
+                try {
+                    const encoded = hash.replace('#paste=', '');
+                    const jsonStr = decodeURIComponent(atob(encoded));
+                    const payload = JSON.parse(jsonStr);
+
+                    renderDisplayView(payload.t, payload.c, payload.o);
+                } catch (e) {
+                    showToast('رابط السكربت غير صالح!', 'fa-exclamation-triangle');
+                    resetToHome();
+                }
+            } else if (hash.startsWith('#raw=')) {
+                try {
+                    const encoded = hash.replace('#raw=', '');
+                    const jsonStr = decodeURIComponent(atob(encoded));
+                    const payload = JSON.parse(jsonStr);
+                    
+                    document.body.innerHTML = `<pre style="word-wrap: break-word; white-space: pre-wrap; color: #8B5CF6; background: #070814; padding: 25px; font-family: monospace; line-height: 1.6;">${escapeHtml(payload.c)}</pre>`;
+                } catch (e) {
+                    document.body.innerText = "Error parsing raw content.";
+                }
+            }
+        }
+
+        function renderDisplayView(title, code, isObfuscated) {
+            document.getElementById('create-view').classList.add('hidden');
+            document.getElementById('display-view').classList.remove('hidden');
+
+            document.getElementById('view-title').textContent = title;
+            document.getElementById('view-code').textContent = code;
+            document.getElementById('char-count').textContent = code.length.toLocaleString() + ' حرف';
+
+            const badge = document.getElementById('view-badge');
+            if (isObfuscated) {
+                badge.textContent = 'مُشفر VIP';
+                badge.className = 'bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30 text-xs px-3 py-1 rounded-full font-bold';
+            } else {
+                badge.textContent = 'غير مشفر (Raw)';
+                badge.className = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-bold';
+            }
+
+            const rawUrl = window.location.href.replace('#paste=', '#raw=');
+            const loadstringCmd = `loadstring(game:HttpGet("${rawUrl}"))()`;
+            
+            document.getElementById('loadstring-output').textContent = loadstringCmd;
+        }
+
+        function resetToHome() {
+            window.location.hash = '';
+            document.getElementById('script-title').value = '';
+            document.getElementById('script-content').value = '';
+
+            document.getElementById('display-view').classList.add('hidden');
+            document.getElementById('create-view').classList.remove('hidden');
+        }
+
+        function copyRawCode() {
+            const code = document.getElementById('view-code').textContent;
+            copyToClipboard(code, 'تم نسخ كود الـ Raw!');
+        }
+
+        function copyLoadstring() {
+            const loadstringCmd = document.getElementById('loadstring-output').textContent.trim();
+            copyToClipboard(loadstringCmd, 'تم نسخ كود ה-Loadstring للمشغل!');
+        }
+
+        function copyToClipboard(text, successMsg) {
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            showToast(successMsg, 'fa-copy');
+        }
+
+        function showToast(message, iconClass = 'fa-check-circle') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.textContent = message;
+            toastIcon.className = `fas ${iconClass} text-base`;
+
+            toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
