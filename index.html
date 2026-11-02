@@ -1,577 +1,833 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCRIPT VAULT | Ultra Obfuscator & Paste Hub</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        deep: {
-                            950: '#070814',
-                            900: '#0B0C1E',
-                            850: '#10122B',
-                            800: '#161938',
-                            700: '#212552',
-                        },
-                        cyber: {
-                            blue: '#3B82F6',
-                            indigo: '#6366F1',
-                            violet: '#8B5CF6',
-                            purple: '#A855F7',
-                            pink: '#EC4899',
-                        }
-                    },
-                    fontFamily: {
-                        mono: ['Fira Code', 'JetBrains Mono', 'monospace'],
-                        sans: ['Tajawal', 'Plus Jakarta Sans', 'sans-serif']
-                    },
-                    backgroundImage: {
-                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                        'shop-glow': 'radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%)',
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>CyberPaste | Secure Lua Obfuscator & Script Hub</title>
     
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        :root {
+            --bg-base: #060813;
+            --bg-surface: #0b0e22;
+            --bg-surface-elevated: #121633;
+            --bg-card: rgba(18, 22, 51, 0.6);
+            
+            --border-color: rgba(99, 102, 241, 0.18);
+            --border-glow: rgba(139, 92, 246, 0.4);
+            
+            --accent-blue: #3b82f6;
+            --accent-indigo: #6366f1;
+            --accent-violet: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+            --gradient-hover: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+            --gradient-glow: radial-gradient(circle at center, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+            
+            --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
         body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #070814;
-            color: #f3f4f6;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 60%);
+            background-attachment: fixed;
         }
-        .code-font {
-            font-family: 'Fira Code', monospace;
+
+        /* Ambient Glow Background Element */
+        .ambient-glow {
+            position: fixed;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 400px;
+            background: var(--gradient-glow);
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(60px);
         }
-        /* Custom Glowing Elements & Shop Card Borders */
-        .glass-card {
-            background: rgba(16, 18, 43, 0.7);
+
+        /* Glassmorphism Header */
+        header {
+            position: relative;
+            z-index: 10;
+            background: rgba(11, 14, 34, 0.7);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-bottom: 1px solid var(--border-color);
+            padding: 18px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .glass-card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
         }
-        .glass-card-hover:hover {
-            border-color: rgba(168, 85, 247, 0.4);
-            box-shadow: 0 0 25px rgba(99, 102, 241, 0.25);
-            transform: translateY(-2px);
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 20px;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
         }
-        .glow-btn {
-            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%);
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
-            transition: all 0.3s ease;
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 30%, var(--accent-indigo) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .glow-btn:hover {
-            box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
-            transform: scale(1.02);
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
-        .badge-glow {
-            box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
-        /* Editor Custom Scrollbar */
-        ::-webkit-scrollbar {
+
+        .badge-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            color: #34d399;
+            font-weight: 600;
+        }
+
+        .badge-status .dot {
             width: 8px;
             height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
         }
-        ::-webkit-scrollbar-track {
-            background: #0B0C1E;
+
+        /* Main Container */
+        main {
+            position: relative;
+            z-index: 5;
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #212552;
-            border-radius: 4px;
+
+        /* Lock Screen Modal */
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 8, 19, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8B5CF6;
+
+        .auth-card {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-glow);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+        }
+
+        .auth-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: var(--accent-indigo);
+            font-size: 28px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .auth-card h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .auth-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .input-control {
+            width: 100%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 16px 14px 48px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-control:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--gradient-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Editor Section Layout */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .editor-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            background: rgba(11, 14, 34, 0.8);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-title i {
+            color: var(--accent-indigo);
+        }
+
+        .editor-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+            background: var(--bg-surface);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-switch input {
+            display: none;
+        }
+
+        .slider {
+            width: 36px;
+            height: 20px;
+            background-color: var(--bg-surface-elevated);
+            border-radius: 20px;
+            position: relative;
+            transition: 0.3s;
+            border: 1px solid var(--border-color);
+        }
+
+        .slider::before {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            left: 2px;
+            top: 2px;
+            background-color: var(--text-secondary);
+            transition: 0.3s;
+        }
+
+        .toggle-switch input:checked + .slider {
+            background-color: var(--accent-indigo);
+            border-color: var(--accent-indigo);
+        }
+
+        .toggle-switch input:checked + .slider::before {
+            transform: translateX(16px);
+            background-color: #fff;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Code Editor Area */
+        .editor-body {
+            position: relative;
+            min-height: 380px;
+            background: #070913;
+        }
+
+        textarea.code-editor {
+            width: 100%;
+            height: 400px;
+            background: transparent;
+            border: none;
+            padding: 20px;
+            color: #e5e7eb;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+            tab-size: 4;
+        }
+
+        textarea.code-editor::placeholder {
+            color: #4b5563;
+        }
+
+        .card-footer {
+            background: rgba(11, 14, 34, 0.8);
+            border-top: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Result Panel */
+        .result-panel {
+            display: none;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glow);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .result-header i {
+            color: #10b981;
+            font-size: 22px;
+        }
+
+        .result-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .result-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .result-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .result-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .code-display {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            color: var(--accent-cyan);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .btn-secondary {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--text-primary);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 12px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: var(--accent-indigo);
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--accent-indigo);
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 768px) {
+            header {
+                padding: 16px 20px;
+            }
+            main {
+                padding: 20px 16px;
+            }
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .editor-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .result-content {
+                flex-direction: column;
+            }
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-cyber-purple selection:text-white bg-shop-glow bg-no-repeat">
+<body>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-deep-800/90 border border-cyber-purple/40 backdrop-blur-xl text-white font-bold px-6 py-3.5 rounded-2xl shadow-2xl transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4">
-        <div class="w-8 h-8 rounded-xl bg-cyber-purple/20 flex items-center justify-center text-cyber-purple border border-cyber-purple/30">
-            <i id="toast-icon" class="fas fa-check-circle text-base"></i>
-        </div>
-        <span id="toast-message" class="text-sm">تمت العملية بنجاح!</span>
-    </div>
+    <div class="ambient-glow"></div>
 
-    <!-- 1. VIP Password Protection Modal -->
-    <div id="lock-screen" class="fixed inset-0 z-50 bg-deep-950/95 backdrop-blur-2xl flex items-center justify-center p-4">
-        <div class="glass-card p-8 sm:p-10 rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden border border-cyber-purple/20">
-            <!-- Ambient Shop Lights -->
-            <div class="absolute -top-20 -right-20 w-48 h-48 bg-cyber-indigo/20 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-cyber-purple/20 rounded-full blur-3xl"></div>
-
-            <div class="text-center mb-8 relative z-10">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-cyber-indigo/20 to-cyber-purple/20 text-cyber-violet rounded-2xl mb-4 border border-cyber-purple/30 shadow-inner">
-                    <i class="fas fa-shield-cat text-3xl"></i>
-                </div>
-                <h2 class="text-2xl font-black text-white tracking-wide">منطقة محمية VIP</h2>
-                <p class="text-slate-400 text-xs mt-2 font-medium">أدخل كلمة المرور الخاصة للوصول إلى لوحة التحكم</p>
+    <!-- Security Auth Screen -->
+    <div class="auth-overlay" id="authScreen">
+        <div class="auth-card">
+            <div class="auth-icon-wrapper">
+                <i class="fa-solid => fa-shield-halved"></i>
             </div>
-
-            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5 relative z-10">
-                <div>
-                    <label class="block text-xs text-slate-300 mb-2 font-bold tracking-wider">كلمة المرور (ACCESS CODE)</label>
-                    <div class="relative">
-                        <input type="password" id="password-input" placeholder="••••••••" required 
-                            class="w-full bg-deep-900/90 border border-deep-700 focus:border-cyber-purple focus:ring-2 focus:ring-cyber-purple/30 rounded-xl px-4 py-3.5 text-white code-font text-center tracking-widest outline-none transition duration-200">
-                        <button type="button" onclick="togglePasswordVisibility()" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white px-2">
-                            <i id="eye-icon" class="fas fa-eye"></i>
-                        </button>
-                    </div>
+            <h2>Access Protection</h2>
+            <p>Please enter the security passkey to unlock the Script Hub & Obfuscator interface.</p>
+            <form id="authForm" onsubmit="handleAuth(event)">
+                <div class="input-group">
+                    <i class="fa-solid fa-key"></i>
+                    <input type="password" id="passkeyInput" class="input-control" placeholder="Enter Access Password..." required autocomplete="off">
                 </div>
-                
-                <div id="login-error" class="hidden text-rose-400 text-xs text-center font-bold bg-rose-500/10 py-2.5 rounded-xl border border-rose-500/20">
-                    <i class="fas fa-circle-exclamation ml-1"></i> كلمة المرور غير صحيحة!
-                </div>
-
-                <button type="submit" class="w-full glow-btn text-white font-extrabold py-3.5 rounded-xl transition duration-200 flex items-center justify-center gap-2 text-sm tracking-wider">
-                    <span>تأكيد الدخول</span>
-                    <i class="fas fa-unlock text-xs"></i>
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-unlock"></i> Unlock Dashboard
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- Header / Navbar -->
-    <header class="border-b border-cyber-purple/15 bg-deep-900/60 backdrop-blur-xl sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-4 cursor-pointer" onclick="resetToHome()">
-                <div class="w-12 h-12 bg-gradient-to-tr from-cyber-indigo/20 via-cyber-violet/20 to-cyber-purple/20 border border-cyber-purple/40 rounded-2xl flex items-center justify-center text-cyber-purple font-black text-2xl shadow-lg">
-                    <i class="fas fa-gem"></i>
-                </div>
-                <div>
-                    <h1 class="font-black text-xl text-white tracking-wider flex items-center gap-2">
-                        SCRIPT VAULT
-                        <span class="bg-gradient-to-r from-cyber-indigo to-cyber-purple text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase shadow-md">STORE PRO</span>
-                    </h1>
-                    <p class="text-[11px] text-slate-400 font-medium">منصة التشفير وتوليد الـ Loadstring الفاخرة</p>
-                </div>
+    <!-- Main Header -->
+    <header>
+        <a href="#" class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-code"></i>
             </div>
-
-            <!-- Header Quick Actions -->
-            <div class="flex items-center gap-3">
-                <button onclick="resetToHome()" class="text-xs bg-deep-850 hover:bg-deep-800 text-slate-200 border border-cyber-purple/20 px-4 py-2.5 rounded-xl transition flex items-center gap-2 font-bold shadow-sm hover:border-cyber-purple/40">
-                    <i class="fas fa-plus text-cyber-violet"></i>
-                    <span class="hidden sm:inline">إضافة سكربت</span>
-                </button>
-                <button onclick="logout()" class="text-xs text-rose-400 bg-rose-500/5 hover:bg-rose-500/10 px-3.5 py-2.5 rounded-xl transition border border-rose-500/20 flex items-center gap-2 font-bold">
-                    <i class="fas fa-power-off"></i>
-                    <span class="hidden sm:inline">خروج</span>
-                </button>
+            <div class="brand-text">
+                <h1>CyberPaste</h1>
+                <p>Lua Execution Suite</p>
+            </div>
+        </a>
+        <div class="header-actions">
+            <div class="badge-status">
+                <span class="dot"></span> Delta Roblox Ready
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-10">
-
-        <!-- Banner / Stats Header -->
-        <div class="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-cyber-purple/20 shadow-2xl">
-            <div class="absolute -right-16 -top-16 w-64 h-64 bg-cyber-purple/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
-                <div class="space-y-2">
-                    <div class="inline-flex items-center gap-2 bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple px-3 py-1 rounded-full text-xs font-bold badge-glow">
-                        <i class="fas fa-shield-halved"></i>
-                        <span>تشفير عالي الأمان + حماية متقدمة</span>
+    <!-- Main Workspace -->
+    <main>
+        <div class="workspace-grid">
+            <div class="editor-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-file-code"></i> Script Source Code
                     </div>
-                    <h2 class="text-2xl sm:text-3xl font-black text-white">انشر وكودك بأمان تام مع Loadstring مباشر</h2>
-                    <p class="text-slate-400 text-xs sm:text-sm max-w-xl">شفر سكربتات اللوا بتشفير معقد ومحمي من السرقة، واحصل على رابط استدعاء مباشر لاستخدامه داخل الهيدرات والمشغلات فوراً.</p>
-                </div>
-
-                <!-- Stats Badges -->
-                <div class="flex items-center gap-3 w-full md:w-auto">
-                    <div class="bg-deep-900/80 border border-cyber-purple/20 px-4 py-3 rounded-2xl flex-1 md:flex-none text-center">
-                        <span class="block text-xs text-slate-400 font-medium">الخوارزمية</span>
-                        <span class="text-sm font-extrabold text-cyber-purple code-font">XOR + Bytecode</span>
-                    </div>
-                    <div class="bg-deep-900/80 border border-cyber-purple/20 px-4 py-3 rounded-2xl flex-1 md:flex-none text-center">
-                        <span class="block text-xs text-slate-400 font-medium">الحالة</span>
-                        <span class="text-sm font-extrabold text-emerald-400 flex items-center justify-center gap-1">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                            نشط 100%
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- VIEW 1: CREATE & OBFUSCATE EDITOR -->
-        <div id="create-view" class="space-y-6">
-            <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl border border-cyber-purple/20">
-                <div class="flex flex-col md:flex-row gap-4 mb-6 justify-between items-stretch md:items-center">
-                    <!-- Script Title Input -->
-                    <div class="flex-1 relative">
-                        <input type="text" id="script-title" placeholder="عنوان السكربت (مثال: Premium Hub V2)" 
-                            class="w-full bg-deep-900/90 border border-deep-700 focus:border-cyber-purple focus:ring-2 focus:ring-cyber-purple/20 rounded-2xl px-5 py-4 text-white text-sm outline-none font-bold placeholder:text-slate-500 transition">
-                    </div>
-                    
-                    <!-- Obfuscation Toggle Box -->
-                    <div class="flex items-center justify-between gap-4 bg-deep-900/90 border border-deep-700 px-5 py-3.5 rounded-2xl border-cyber-purple/20">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-cyber-purple/10 text-cyber-purple flex items-center justify-center border border-cyber-purple/20">
-                                <i class="fas fa-lock-triangle text-sm"></i>
-                            </div>
-                            <div>
-                                <span class="text-xs font-black text-white block">تشفير قوي جداً</span>
-                                <span class="text-[10px] text-slate-400 block">Heavy Obfuscation</span>
-                            </div>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="obfuscate-toggle" class="sr-only peer" checked>
-                            <div class="w-12 h-6 bg-deep-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-cyber-indigo peer-checked:to-cyber-purple"></div>
+                    <div class="editor-controls">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="obfuscateToggle" checked>
+                            <span class="slider"></span>
+                            <span class="toggle-label"><i class="fa-solid fa-user-shield" style="color: var(--accent-violet);"></i> Heavy Obfuscation</span>
                         </label>
                     </div>
                 </div>
-
-                <!-- Code Input Textarea -->
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center px-1">
-                        <label class="text-xs font-bold text-slate-300 flex items-center gap-2">
-                            <i class="fas fa-code text-cyber-violet"></i>
-                            محرر السكربتات (Lua Code Input)
-                        </label>
-                        <button onclick="clearEditor()" class="text-xs text-slate-400 hover:text-rose-400 transition flex items-center gap-1 font-bold">
-                            <i class="fas fa-trash-can"></i>
-                            <span>مسح النص</span>
-                        </button>
-                    </div>
-                    <div class="relative rounded-2xl overflow-hidden border border-deep-700 focus-within:border-cyber-purple transition">
-                        <textarea id="script-content" rows="14" placeholder="-- ضع كود السكربت الخاص بك هنا (Lua Code)...&#10;print('Hello World from Script Vault!')"
-                            class="w-full bg-deep-950/90 p-5 text-slate-100 code-font text-xs sm:text-sm outline-none resize-y leading-relaxed"></textarea>
-                    </div>
+                <div class="editor-body">
+                    <textarea id="scriptInput" class="code-editor" placeholder="-- Paste your Lua script here...&#10;print('Hello World from CyberPaste!')" spellcheck="false"></textarea>
                 </div>
-
-                <!-- Action Button -->
-                <div class="mt-8 flex justify-end">
-                    <button onclick="publishScript()" class="w-full sm:w-auto glow-btn text-white font-black px-10 py-4 rounded-2xl transition flex items-center justify-center gap-3 text-base">
-                        <i class="fas fa-bolt text-lg"></i>
-                        <span>نشر السكربت وتوليد الرابط</span>
+                <div class="card-footer">
+                    <div class="status-info">
+                        <i class="fa-solid fa-circle-info"></i> Compatible with Roblox Executors (Delta, Hydrogen, Wave)
+                    </div>
+                    <button class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="publishScript()">
+                        <i class="fa-solid fa-paper-plane"></i> Publish & Generate Link
                     </button>
                 </div>
             </div>
-        </div>
 
-        <!-- VIEW 2: DISPLAY & LOADSTRING GENERATOR -->
-        <div id="display-view" class="hidden space-y-8">
-            
-            <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl border border-cyber-purple/20 space-y-8">
-                <!-- Header Status -->
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-cyber-purple/15 pb-6 gap-4">
-                    <div class="space-y-1">
-                        <div class="flex items-center gap-3">
-                            <h2 id="view-title" class="text-2xl font-black text-white">عنوان السكربت</h2>
-                            <span id="view-badge" class="bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30 text-xs px-3 py-1 rounded-full font-bold">مُشفر VIP</span>
-                        </div>
-                        <p class="text-xs text-slate-400">تم تجهيز كود الـ Loadstring المباشر للتشغيل الفوري.</p>
-                    </div>
+            <!-- Output Panel -->
+            <div class="result-panel" id="resultPanel">
+                <div class="result-header">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <h3>Script Published Successfully!</h3>
+                </div>
 
-                    <div class="flex flex-wrap gap-3">
-                        <button onclick="copyRawCode()" class="bg-deep-850 hover:bg-deep-800 text-slate-100 border border-cyber-purple/20 px-5 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center gap-2">
-                            <i class="fas fa-file-code text-cyber-violet"></i>
-                            <span>نسخ الكود (Raw)</span>
-                        </button>
-                        <button onclick="copyLoadstring()" class="glow-btn text-white px-6 py-2.5 rounded-xl text-xs font-black transition flex items-center gap-2">
-                            <i class="fas fa-copy"></i>
-                            <span>نسخ الـ Loadstring</span>
+                <div class="result-box">
+                    <span class="result-label">1. Direct Loadstring (Use in Roblox Executors):</span>
+                    <div class="result-content">
+                        <div class="code-display" id="loadstringDisplay"></div>
+                        <button class="btn-secondary" onclick="copyToClipboard('loadstringDisplay', 'Loadstring copied to clipboard!')">
+                            <i class="fa-regular fa-copy"></i> Copy Loadstring
                         </button>
                     </div>
                 </div>
 
-                <!-- Loadstring Command Box -->
-                <div class="space-y-3">
-                    <label class="block text-xs font-black text-cyber-purple uppercase tracking-wider flex items-center gap-2">
-                        <i class="fas fa-terminal"></i>
-                        رابط الاستدعاء المباشر (Direct Loadstring Executor)
-                    </label>
-                    <div class="bg-deep-950 border border-cyber-purple/30 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
-                        <code id="loadstring-output" class="code-font text-xs text-slate-200 overflow-x-auto whitespace-nowrap block py-1 w-full">
-                            loadstring(game:HttpGet("..."))()
-                        </code>
-                        <button onclick="copyLoadstring()" class="bg-cyber-purple/10 hover:bg-cyber-purple/20 text-cyber-purple border border-cyber-purple/30 p-2.5 rounded-xl transition shrink-0">
-                            <i class="fas fa-clone text-sm"></i>
+                <div class="result-box">
+                    <span class="result-label">2. Raw Code Endpoint URL:</span>
+                    <div class="result-content">
+                        <div class="code-display" id="rawUrlDisplay"></div>
+                        <button class="btn-secondary" onclick="copyToClipboard('rawUrlDisplay', 'Raw URL copied to clipboard!')">
+                            <i class="fa-solid fa-link"></i> Copy Raw Link
                         </button>
                     </div>
-                </div>
-
-                <!-- Code View -->
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                        <label class="block text-xs font-bold text-slate-400">معاينة محتوى الكود النهائي</label>
-                        <span id="char-count" class="text-xs text-slate-500 code-font">0 حروف</span>
-                    </div>
-                    <pre><code id="view-code" class="block w-full bg-deep-950 border border-deep-700 rounded-2xl p-5 text-slate-300 code-font text-xs overflow-x-auto leading-relaxed max-h-[450px]"></code></pre>
                 </div>
             </div>
-
         </div>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-cyber-purple/15 py-8 text-center text-xs text-slate-500 bg-deep-950">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p class="font-medium">SCRIPT VAULT STORE © <span id="year"></span> • جميع الحقوق محفوظة</p>
-            <div class="flex items-center gap-4 text-slate-400 text-sm">
-                <i class="fab fa-discord hover:text-cyber-purple transition cursor-pointer"></i>
-                <i class="fab fa-github hover:text-cyber-purple transition cursor-pointer"></i>
-                <i class="fas fa-shield-cat hover:text-cyber-purple transition cursor-pointer"></i>
-            </div>
-        </div>
+    <footer>
+        <p>&copy; CyberPaste System. Designed for secure high-performance Lua script distribution.</p>
     </footer>
 
-    <!-- Logic Engine -->
+    <!-- Toast Notification -->
+    <div class="toast" id="toastNotification">
+        <i class="fa-solid fa-circle-check" style="color: #34d399;"></i>
+        <span id="toastMessage">Action completed successfully!</span>
+    </div>
+
     <script>
-        const AUTH_KEY = '123YHTYH';
-        const SESSION_STORAGE_KEY = 'script_vault_auth';
+        // Session Password Authentication (Valid only for current session - clears on tab close)
+        const PASSKEY = "123YHTYH";
 
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        window.onload = function() {
-            checkAuth();
-            handleUrlParams();
-        };
-
-        function checkAuth() {
-            const isAuthenticated = localStorage.getItem(SESSION_STORAGE_KEY);
-            const lockScreen = document.getElementById('lock-screen');
-            if (isAuthenticated === 'true') {
-                lockScreen.classList.add('hidden');
-            } else {
-                lockScreen.classList.remove('hidden');
+        window.addEventListener('DOMContentLoaded', () => {
+            const isAuthed = sessionStorage.getItem('cyber_session_auth');
+            if (isAuthed === 'true') {
+                document.getElementById('authScreen').style.display = 'none';
             }
-        }
+            
+            // Check if URL has raw parameters
+            handleRawDataRoute();
+        });
 
-        function handleLogin(e) {
+        function handleAuth(e) {
             e.preventDefault();
-            const passwordInput = document.getElementById('password-input').value;
-            const errorDiv = document.getElementById('login-error');
-
-            if (passwordInput === AUTH_KEY) {
-                localStorage.setItem(SESSION_STORAGE_KEY, 'true');
-                document.getElementById('lock-screen').classList.add('hidden');
-                errorDiv.classList.add('hidden');
-                showToast('تم تسجيل الدخول بنجاح!', 'fa-lock-open');
+            const input = document.getElementById('passkeyInput').value;
+            if (input === PASSKEY) {
+                sessionStorage.setItem('cyber_session_auth', 'true');
+                document.getElementById('authScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('authScreen').style.display = 'none';
+                }, 300);
+                showToast("Access Granted. Welcome!");
             } else {
-                errorDiv.classList.remove('hidden');
+                showToast("Incorrect Password! Please try again.");
+                document.getElementById('passkeyInput').value = '';
+                document.getElementById('passkeyInput').focus();
             }
         }
 
-        function logout() {
-            localStorage.removeItem(SESSION_STORAGE_KEY);
-            location.reload();
-        }
-
-        function togglePasswordVisibility() {
-            const input = document.getElementById('password-input');
-            const icon = document.getElementById('eye-icon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fas fa-eye-slash';
-            } else {
-                input.type = 'password';
-                icon.className = 'fas fa-eye';
-            }
-        }
-
-        function clearEditor() {
-            document.getElementById('script-content').value = '';
-            showToast('تم مسح المحرر!', 'fa-eraser');
-        }
-
-        // Heavy Multi-Layer Lua Obfuscation Engine
+        // Fast Lua Obfuscator Engine (XOR + Bytecode Wrapper compatible with Roblox Executor Lua)
         function obfuscateLua(code) {
-            if (!code.trim()) return '';
-
-            // Step 1: XOR Byte Processing
-            const bytes = [];
+            const key = Math.floor(Math.random() * 200) + 20;
+            let bytes = [];
             for (let i = 0; i < code.length; i++) {
-                bytes.push(code.charCodeAt(i));
+                bytes.push(code.charCodeAt(i) ^ key);
             }
-
-            const randVar = (prefix) => prefix + '_' + Math.random().toString(36).substring(2, 9);
-            const varArray = randVar('VaultData');
-            const varStr = randVar('Decrypted');
-            const varKey = Math.floor(Math.random() * 200) + 10;
-            const varKeyName = randVar('Key');
-            const varFunc = randVar('Run');
-
-            const encryptedBytes = bytes.map(b => b ^ varKey);
-
-            // Step 2: Advanced Dynamic Wrapper Construction
-            const obfuscatedCode = 
-`--[[
-    ==================================================
-    [ SCRIPT VAULT - HEAVY LUA OBFUSCATOR V2 ]
-    Protected & Encrypted with Ultra XOR Bytecode Engine
-    Timestamp: ${new Date().toUTCString()}
-    ==================================================
---]]
-
-local ${varKeyName} = ${varKey};
-local ${varArray} = {${encryptedBytes.join(',')}};
-local ${varStr} = "";
-
-for i = 1, #${varArray} do
-    local b = ${varArray}[i];
-    ${varStr} = ${varStr} .. string.char(bit32 and bit32.bxor(b, ${varKeyName}) or (b ~ ${varKeyName}));
+            
+            const byteString = bytes.join(',');
+            
+            return `-- CyberPaste Obfuscated Script
+local _k = ${key}
+local _b = {${byteString}}
+local _s = ""
+for i = 1, #_b do
+    _s = _s .. string.char(bit32 and bit32.bxor(_b[i], _k) or (_b[i] ~ _k))
 end
-
-local ${varFunc} = assert(loadstring or load)(${varStr});
-return ${varFunc}();`;
-
-            return obfuscatedCode;
+local _f, _e = loadstring(_s)
+if not _f then
+    error("[CyberPaste] Execution failed: " .. tostring(_e))
+else
+    return _f()
+end`;
         }
 
-        function publishScript() {
-            const title = document.getElementById('script-title').value.trim() || 'Untitled Script';
-            let code = document.getElementById('script-content').value;
-            const isObfuscated = document.getElementById('obfuscate-toggle').checked;
+        // Encode Payload to Base64 Hash String
+        function encodePayload(str) {
+            return btoa(encodeURIComponent(str));
+        }
 
-            if (!code.trim()) {
-                showToast('يرجى إدخال الكود أولاً!', 'fa-exclamation-triangle');
+        function decodePayload(str) {
+            return decodeURIComponent(atob(str));
+        }
+
+        // Publish Handler
+        function publishScript() {
+            const rawCode = document.getElementById('scriptInput').value.trim();
+            if (!rawCode) {
+                showToast("Please enter a valid Lua script first!");
                 return;
             }
 
-            if (isObfuscated) {
-                code = obfuscateLua(code);
-            }
+            const shouldObfuscate = document.getElementById('obfuscateToggle').checked;
+            const finalCode = shouldObfuscate ? obfuscateLua(rawCode) : rawCode;
 
-            const payload = {
-                t: title,
-                c: code,
-                o: isObfuscated,
-                d: Date.now()
-            };
-
-            try {
-                const jsonStr = JSON.stringify(payload);
-                const encoded = btoa(encodeURIComponent(jsonStr));
-                
-                window.location.hash = 'paste=' + encoded;
-                renderDisplayView(title, code, isObfuscated);
-                showToast('تم التشفير والتولد بنجاح!', 'fa-shield-check');
-            } catch (e) {
-                showToast('حدث خطأ أثناء معالجة الكود!', 'fa-times-circle');
-            }
-        }
-
-        function handleUrlParams() {
-            const hash = window.location.hash;
-            if (hash.startsWith('#paste=')) {
-                try {
-                    const encoded = hash.replace('#paste=', '');
-                    const jsonStr = decodeURIComponent(atob(encoded));
-                    const payload = JSON.parse(jsonStr);
-
-                    renderDisplayView(payload.t, payload.c, payload.o);
-                } catch (e) {
-                    showToast('رابط السكربت غير صالح!', 'fa-exclamation-triangle');
-                    resetToHome();
-                }
-            } else if (hash.startsWith('#raw=')) {
-                try {
-                    const encoded = hash.replace('#raw=', '');
-                    const jsonStr = decodeURIComponent(atob(encoded));
-                    const payload = JSON.parse(jsonStr);
-                    
-                    document.body.innerHTML = `<pre style="word-wrap: break-word; white-space: pre-wrap; color: #8B5CF6; background: #070814; padding: 25px; font-family: monospace; line-height: 1.6;">${escapeHtml(payload.c)}</pre>`;
-                } catch (e) {
-                    document.body.innerText = "Error parsing raw content.";
-                }
-            }
-        }
-
-        function renderDisplayView(title, code, isObfuscated) {
-            document.getElementById('create-view').classList.add('hidden');
-            document.getElementById('display-view').classList.remove('hidden');
-
-            document.getElementById('view-title').textContent = title;
-            document.getElementById('view-code').textContent = code;
-            document.getElementById('char-count').textContent = code.length.toLocaleString() + ' حرف';
-
-            const badge = document.getElementById('view-badge');
-            if (isObfuscated) {
-                badge.textContent = 'مُشفر VIP';
-                badge.className = 'bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30 text-xs px-3 py-1 rounded-full font-bold';
-            } else {
-                badge.textContent = 'غير مشفر (Raw)';
-                badge.className = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-bold';
-            }
-
-            const rawUrl = window.location.href.replace('#paste=', '#raw=');
-            const loadstringCmd = `loadstring(game:HttpGet("${rawUrl}"))()`;
+            // Generate payload hash
+            const payload = encodePayload(finalCode);
             
-            document.getElementById('loadstring-output').textContent = loadstringCmd;
+            // Build current URL
+            const baseUrl = window.location.href.split('#')[0].split('?')[0];
+            const rawUrl = `${baseUrl}?raw=${payload}`;
+            const loadstringCmd = `loadstring(game:HttpGet("${rawUrl}"))()`;
+
+            document.getElementById('loadstringDisplay').innerText = loadstringCmd;
+            document.getElementById('rawUrlDisplay').innerText = rawUrl;
+
+            const resultPanel = document.getElementById('resultPanel');
+            resultPanel.style.display = 'block';
+            resultPanel.scrollIntoView({ behavior: 'smooth' });
+
+            showToast("Script published and loadstring ready!");
         }
 
-        function resetToHome() {
-            window.location.hash = '';
-            document.getElementById('script-title').value = '';
-            document.getElementById('script-content').value = '';
+        // Route handler for RAW execution requests
+        function handleRawDataRoute() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const rawData = urlParams.get('raw');
 
-            document.getElementById('display-view').classList.add('hidden');
-            document.getElementById('create-view').classList.remove('hidden');
+            if (rawData) {
+                try {
+                    const decodedScript = decodePayload(rawData);
+                    document.open();
+                    document.write(decodedScript);
+                    document.close();
+                } catch (e) {
+                    document.body.innerText = "-- Error: Failed to render requested Raw Lua payload.";
+                }
+            }
         }
 
-        function copyRawCode() {
-            const code = document.getElementById('view-code').textContent;
-            copyToClipboard(code, 'تم نسخ كود الـ Raw!');
+        function copyToClipboard(elementId, message) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(message);
+            });
         }
 
-        function copyLoadstring() {
-            const loadstringCmd = document.getElementById('loadstring-output').textContent.trim();
-            copyToClipboard(loadstringCmd, 'تم نسخ كود ה-Loadstring للمشغل!');
-        }
-
-        function copyToClipboard(text, successMsg) {
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = text;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-
-            showToast(successMsg, 'fa-copy');
-        }
-
-        function showToast(message, iconClass = 'fa-check-circle') {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-
-            toastMsg.textContent = message;
-            toastIcon.className = `fas ${iconClass} text-base`;
-
-            toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
-            toast.classList.add('opacity-100', 'translate-y-0');
-
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.add('show');
             setTimeout(() => {
-                toast.classList.remove('opacity-100', 'translate-y-0');
-                toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+                toast.classList.remove('show');
             }, 3000);
-        }
-
-        function escapeHtml(text) {
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
         }
     </script>
 </body>
